@@ -98,13 +98,14 @@ pool.query(createTableQuery)
 
 // Create estudiantes_form_submissions table if it doesn't exist
 const createEstudiantesTableQuery = `
-  CREATE TABLE IF NOT EXISTS estudiantes_form_submissions (
+  DROP TABLE IF EXISTS estudiantes_form_submissions;
+  CREATE TABLE estudiantes_form_submissions (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    institucion_educativa VARCHAR(255) NOT NULL,
-    anos_estudiando VARCHAR(50) NOT NULL,
-    grado_actual VARCHAR(50) NOT NULL,
-    jornada VARCHAR(50) NOT NULL,
+    institucion_educativa TEXT NOT NULL,
+    anos_estudiando TEXT NOT NULL,
+    grado_actual TEXT NOT NULL,
+    jornada TEXT NOT NULL,
     frequency_ratings5 JSONB NOT NULL,
     frequency_ratings6 JSONB NOT NULL,
     frequency_ratings7 JSONB NOT NULL
@@ -118,15 +119,36 @@ pool.query(createEstudiantesTableQuery)
 // API endpoint to save form data
 app.post('/api/submit-form', async (req, res) => {
   try {
+    console.log('Received form data:', req.body);
+
     const {
       schoolName,
       yearsOfExperience,
-      currentGrade,
+      teachingGradesEarly,
+      teachingGradesLate,
       schedule,
+      feedbackSources,
       frequencyRatings5,
       frequencyRatings6,
       frequencyRatings7
     } = req.body;
+
+    // Validate required fields
+    if (!schoolName || !yearsOfExperience || !schedule) {
+      throw new Error('Missing required fields');
+    }
+
+    // Validate frequency ratings
+    if (!frequencyRatings5 || !frequencyRatings6 || !frequencyRatings7) {
+      throw new Error('Missing frequency ratings');
+    }
+
+    // Combine early and late grades into current_grade
+    const currentGrade = [...(teachingGradesEarly || []), ...(teachingGradesLate || [])][0] || '';
+    
+    if (!currentGrade) {
+      throw new Error('No grade selected');
+    }
 
     const query = `
       INSERT INTO estudiantes_form_submissions (
@@ -147,21 +169,26 @@ app.post('/api/submit-form', async (req, res) => {
       yearsOfExperience,
       currentGrade,
       schedule,
-      frequencyRatings5,
-      frequencyRatings6,
-      frequencyRatings7
+      JSON.stringify(frequencyRatings5),
+      JSON.stringify(frequencyRatings6),
+      JSON.stringify(frequencyRatings7)
     ];
 
+    console.log('Executing query with values:', values);
+
     const result = await pool.query(query, values);
+    console.log('Query result:', result.rows[0]);
+
     res.json({
       success: true,
       data: result.rows[0]
     });
   } catch (error) {
-    console.error('Error saving form response:', error);
+    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
     res.status(500).json({
       success: false,
-      error: 'Failed to save form response'
+      error: error instanceof Error ? error.message : 'Failed to save form response',
+      details: process.env.NODE_ENV === 'development' ? (error instanceof Error ? error.stack : null) : null
     });
   }
 });

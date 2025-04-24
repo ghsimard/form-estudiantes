@@ -1,12 +1,34 @@
-// Questions for the first frequency rating matrix (question 7)
+// Questions for COMUNICACIÓN (question 5)
+export const frequencyQuestions5 = [
+  'Mis profesores están dispuestos a hablar con mis acudientes sobre cómo me está yendo en el colegio, en momentos diferentes a la entrega de notas.',
+  'En mi colegio reconocen públicamente las actividades y esfuerzos exitosos que hacen los profesores para que nosotros aprendamos.',
+  'La comunicación que tengo con los directivos de mi colegio es respetuosa y clara.',
+  'La comunicación entre mis profesores es respetuosa y clara.',
+  'Mis profesores me dejan actividades para hacer en casa, las cuales necesitan el apoyo de mis acudientes.',
+  'En mi colegio se promueve mi participación en la toma de decisiones sobre las metas institucionales.'
+];
+
+// Questions for PRÁCTICAS PEDAGÓGICAS (question 6)
+export const frequencyQuestions6 = [
+  'Los profesores me llevan a otros sitios fuera del salón o del colegio para hacer las clases (por ejemplo, la biblioteca, el laboratorio, el parque, el museo, el río, etc.).',
+  'Los profesores tienen en cuenta mis intereses y afinidades para escoger lo que vamos a hacer en clase.',
+  'Los profesores trabajan juntos en proyectos para hacer actividades que nos ayudan a aprender más y mejor.',
+  'Mis profesores hacen las clases de manera que nos permiten aprender a todas y todos sin importar nuestras diferencias (discapacidad, situaciones familiares o sociales).',
+  'Cuando mis profesores me evalúan tienen en cuenta mis emociones, además de mis aprendizajes y comportamiento.',
+  'Participamos en campeonatos deportivos, ferias y olimpiadas con otros colegios o instituciones.',
+  'Mis profesores logran hacer sus clases de manera fluida.',
+  'Mis profesores me demuestran que confían en mí y creen en mis habilidades y capacidades.'
+];
+
+// Questions for CONVIVENCIA (question 7)
 export const frequencyQuestions7 = [
   'Mis compañeros y yo tratamos con respeto a los profesores, directivos y administrativos del colegio.',
-  'La comunicación entre mis profesores es respetuosa y clara.',
-  'Mis profesores hacen las clases de manera que nos permiten aprender a todas y todos sin importar nuestras diferencias (discapacidad, situaciones familiares o sociales).',
+  'Mis compañeros y yo somos solidarios entre nosotros, respetando y aceptando las creencias religiosas, el género, la orientación sexual, el grupo étnico y las capacidades o talentos de los demás.',
+  'Mis profesores establecen conmigo y mis compañeros acuerdos de convivencia al comienzo del año.',
+  'Mis opiniones, propuestas y sugerencias se tienen en cuenta cuando se construyen acuerdos de convivencia en el colegio.',
+  'En el colegio mis compañeros y yo somos tratados con respeto sin importar nuestras creencias religiosas, género, orientación sexual, grupo étnico y capacidades o talentos.',
   'En el colegio me siento escuchado/a y comprendido/a por los profesores, los directivos, los estudiantes y otros acudientes.',
-  'Cuando mis profesores me evalúan tienen en cuenta mis emociones, además de mis aprendizajes y comportamiento.',
-  'En el colegio recibo apoyo para resolver los conflictos que se dan y generar aprendizajes a partir de estos.',
-  'Participamos en campeonatos deportivos, ferias y olimpiadas con otros colegios o instituciones.'
+  'En el colegio recibo apoyo para resolver los conflictos que se dan y generar aprendizajes a partir de estos.'
 ];
 
 // Questions for the second frequency rating matrix (question 8)
@@ -30,26 +52,6 @@ export const frequencyQuestions9 = [
   'En el colegio mis estudiantes son tratados con respeto, independiente de sus creencias religiosas, género, orientación sexual, grupo étnico y capacidades o talentos de los demás.',
   'En el colegio recibo apoyo para resolver los conflictos que surgen y generar aprendizajes a partir de estos.',
   'En el colegio me siento escuchado/a y comprendido/a por otros docentes, los directivos, los estudiantes y los acudientes.'
-];
-
-export const frequencyQuestions5 = [
-  'Mis profesores están dispuestos a hablar con mis acudientes sobre cómo me está yendo en el colegio, en momentos diferentes a la entrega de notas.',
-  'Los profesores tienen en cuenta mis intereses y afinidades para escoger lo que vamos a hacer en clase.',
-  'Mis compañeros y yo somos solidarios entre nosotros, respetando y aceptando las creencias religiosas, el género, la orientación sexual, el grupo étnico y las capacidades o talentos de los demás.',
-  'Mis profesores me dejan actividades para hacer en casa, las cuales necesitan el apoyo de mis acudientes.',
-  'Los profesores trabajan juntos en proyectos para hacer actividades que nos ayudan a aprender más y mejor.',
-  'Mis profesores establecen conmigo y mis compañeros acuerdos de convivencia al comienzo del año.',
-  'En mi colegio se promueve mi participación en la toma de decisiones sobre las metas institucionales.'
-];
-
-export const frequencyQuestions6 = [
-  'Los profesores me llevan a otros sitios fuera del salón o del colegio para hacer las clases (por ejemplo, la biblioteca, el laboratorio, el parque, el museo, el río, etc.).',
-  'Mis opiniones, propuestas y sugerencias se tienen en cuenta cuando se construyen acuerdos de convivencia en el colegio.',
-  'En mi colegio reconocen públicamente las actividades y esfuerzos exitosos que hacen los profesores para que nosotros aprendamos.',
-  'Mis profesores logran hacer sus clases de manera fluida.',
-  'En el colegio mis compañeros y yo somos tratados con respeto sin importar nuestras creencias religiosas, género, orientación sexual, grupo étnico y capacidades o talentos.',
-  'La comunicación que tengo con los directivos de mi colegio es respetuosa y clara.',
-  'Mis profesores me demuestran que confían en mí y creen en mis habilidades y capacidades.'
 ];
 
 export const frequencyOptions = ['Siempre', 'Casi siempre', 'A veces', 'Casi nunca', 'Nunca']; 

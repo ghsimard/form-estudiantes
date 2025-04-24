@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ThankYouPage from './components/ThankYouPage';
 import HighlightedText from './components/HighlightedText';
-import { frequencyQuestions5, frequencyQuestions6, frequencyQuestions7, frequencyQuestions8, frequencyQuestions9, frequencyOptions } from './data/questions';
+import { frequencyQuestions5, frequencyQuestions6, frequencyQuestions7, frequencyOptions } from './data/questions';
 import { FrequencyRatings } from './types/form';
 
 interface FormData {
@@ -106,9 +106,11 @@ function App() {
       );
     };
 
-    const section8Complete = validateFrequencySection(frequencyQuestions9, 8);
+    const section5Complete = validateFrequencySection(frequencyQuestions5, 5);
+    const section6Complete = validateFrequencySection(frequencyQuestions6, 6);
+    const section7Complete = validateFrequencySection(frequencyQuestions7, 7);
 
-    if (!section8Complete) {
+    if (!section5Complete || !section6Complete || !section7Complete) {
       alert('Por favor, responda todas las preguntas de frecuencia antes de enviar el formulario.');
       return;
     }
