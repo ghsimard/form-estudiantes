@@ -103,15 +103,15 @@ function App() {
     }
     
     // Check if all frequency rating questions are answered
-    const validateFrequencySection = (questions: string[], sectionNumber: number) => {
+    const validateFrequencySection = (questions: string[], section: string) => {
       return questions.every(question => 
-        (formData[`frequencyRatings${sectionNumber}` as keyof FormData] as FrequencyRatings)[question] !== undefined
+        (formData[section] as FrequencyRatings)[question] !== undefined
       );
     };
 
-    const section5Complete = validateFrequencySection(frequencyQuestions5, 5);
-    const section6Complete = validateFrequencySection(frequencyQuestions6, 6);
-    const section7Complete = validateFrequencySection(frequencyQuestions7, 7);
+    const section5Complete = validateFrequencySection(frequencyQuestions5, 'Comunicacion');
+    const section6Complete = validateFrequencySection(frequencyQuestions6, 'Practicas_Pedagogicas');
+    const section7Complete = validateFrequencySection(frequencyQuestions7, 'Convivencia');
 
     if (!section5Complete || !section6Complete || !section7Complete) {
       alert('Por favor, responda todas las preguntas de frecuencia antes de enviar el formulario.');

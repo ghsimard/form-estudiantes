@@ -128,9 +128,9 @@ app.post('/api/submit-form', async (req, res) => {
       teachingGradesLate,
       schedule,
       feedbackSources,
-      frequencyRatings5,
-      frequencyRatings6,
-      frequencyRatings7
+      Comunicacion,
+      Practicas_Pedagogicas,
+      Convivencia
     } = req.body;
 
     // Validate required fields
@@ -139,7 +139,7 @@ app.post('/api/submit-form', async (req, res) => {
     }
 
     // Validate frequency ratings
-    if (!frequencyRatings5 || !frequencyRatings6 || !frequencyRatings7) {
+    if (!Comunicacion || !Practicas_Pedagogicas || !Convivencia) {
       throw new Error('Missing frequency ratings');
     }
 
@@ -169,9 +169,9 @@ app.post('/api/submit-form', async (req, res) => {
       yearsOfExperience,
       currentGrade,
       schedule,
-      JSON.stringify(frequencyRatings5),
-      JSON.stringify(frequencyRatings6),
-      JSON.stringify(frequencyRatings7)
+      JSON.stringify(Comunicacion),
+      JSON.stringify(Practicas_Pedagogicas),
+      JSON.stringify(Convivencia)
     ];
 
     console.log('Executing query with values:', values);
