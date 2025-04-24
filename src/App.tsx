@@ -279,16 +279,16 @@ function App() {
 
           <div className="bg-blue-50 border-l-4 border-blue-400 p-4 mb-8">
             <p className="text-sm text-blue-700">
-              Con el objetivo de brindar información a los directivos docentes de tu Institución Educativa para que puedan identificar retos y oportunidades de mejora, el Programa Rectores Líderes Transformadores y Coordinadores Líderes Transformadores ha diseñado una encuesta de percepción sobre la comunicación, la convivencia y las prácticas pedagógicas que contribuyen a un mejor ambiente escolar en tu institución.
+              Con el propósito de brindar insumos valiosos a los directivos docentes sobre su Institución Educativa y apoyar la identificación de retos y oportunidades de mejora, el Programa Rectores Líderes Transformadores y Coordinadores Líderes Transformadores ha diseñado la "Encuesta de Ambiente Escolar", centrada en tres aspectos clave: la comunicación, la convivencia y las prácticas pedagógicas.
             </p>
             <p className="text-sm text-blue-700 mt-2">
-              Tus respuestas son valiosas para obtener información que le permita al rector o coordinador de tu institución mejorar su gestión.
+              Las respuestas de los participantes son fundamentales para generar información que permita a rectores y coordinadores fortalecer su gestión institucional y avanzar en procesos de transformación, sustentados en la toma de decisiones basada en datos.
             </p>
             <p className="text-sm text-blue-700 mt-2">
-              La información recogida por medio de esta encuesta es confidencial y sólo será utilizada con fines estadísticos y de mejoramiento del mismo.
+              La información recolectada será tratada de manera confidencial y utilizada exclusivamente con fines estadísticos y de mejoramiento continuo.
             </p>
             <p className="text-sm font-semibold text-blue-700 mt-2">
-              Por favor, responde todas las preguntas.
+              Te invitamos a responder con sinceridad y a completar todas las preguntas de la encuesta. ¡Gracias!
             </p>
           </div>
 
