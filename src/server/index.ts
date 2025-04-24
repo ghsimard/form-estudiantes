@@ -106,9 +106,9 @@ const createEstudiantesTableQuery = `
     anos_estudiando TEXT NOT NULL,
     grado_actual TEXT NOT NULL,
     jornada TEXT NOT NULL,
-    frequency_ratings5 JSONB NOT NULL,
-    frequency_ratings6 JSONB NOT NULL,
-    frequency_ratings7 JSONB NOT NULL
+    Comunicacion JSONB NOT NULL,
+    Practicas_Pedagogicas JSONB NOT NULL,
+    Convivencia JSONB NOT NULL
   );
 `;
 
@@ -156,9 +156,9 @@ app.post('/api/submit-form', async (req, res) => {
         anos_estudiando,
         grado_actual,
         jornada,
-        frequency_ratings5,
-        frequency_ratings6,
-        frequency_ratings7
+        Comunicacion,
+        Practicas_Pedagogicas,
+        Convivencia
       )
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;

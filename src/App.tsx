@@ -11,11 +11,9 @@ interface FormData {
   teachingGradesLate: string[];
   schedule: string;
   feedbackSources: string[];
-  frequencyRatings5: FrequencyRatings;
-  frequencyRatings6: FrequencyRatings;
-  frequencyRatings7: FrequencyRatings;
-  frequencyRatings8: FrequencyRatings;
-  frequencyRatings9: FrequencyRatings;
+  Comunicacion: FrequencyRatings;
+  Practicas_Pedagogicas: FrequencyRatings;
+  Convivencia: FrequencyRatings;
   [key: string]: string | string[] | FrequencyRatings;
 }
 
@@ -27,11 +25,9 @@ function App() {
     teachingGradesLate: [],
     schedule: '',
     feedbackSources: [],
-    frequencyRatings5: {},
-    frequencyRatings6: {},
-    frequencyRatings7: {},
-    frequencyRatings8: {},
-    frequencyRatings9: {}
+    Comunicacion: {},
+    Practicas_Pedagogicas: {},
+    Convivencia: {}
   });
 
   const [schoolSuggestions, setSchoolSuggestions] = useState<string[]>([]);
@@ -66,11 +62,11 @@ function App() {
     }));
   };
 
-  const handleFrequencyChange = (section: number, question: string, value: string) => {
+  const handleFrequencyChange = (section: string, question: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [`frequencyRatings${section}`]: {
-        ...(prev[`frequencyRatings${section}` as keyof FormData] as FrequencyRatings),
+      [section]: {
+        ...(prev[section] as FrequencyRatings),
         [question]: value
       }
     }));
@@ -146,11 +142,9 @@ function App() {
           teachingGradesLate: [],
           schedule: '',
           feedbackSources: [],
-          frequencyRatings5: {},
-          frequencyRatings6: {},
-          frequencyRatings7: {},
-          frequencyRatings8: {},
-          frequencyRatings9: {}
+          Comunicacion: {},
+          Practicas_Pedagogicas: {},
+          Convivencia: {}
         });
       } else {
         throw new Error(result.error || 'Failed to submit form');
@@ -192,15 +186,15 @@ function App() {
     setSchoolSuggestions([]);
   };
 
-  const FrequencyMatrix = ({ questionNumber, questions, title }: { questionNumber: number; questions: string[]; title: string }) => {
+  const FrequencyMatrix = ({ section, questions, title }: { section: string; questions: string[]; title: string }) => {
     const isAnswered = (question: string) => 
-      (formData[`frequencyRatings${questionNumber}` as keyof FormData] as FrequencyRatings)[question] !== undefined;
+      (formData[section] as FrequencyRatings)[question] !== undefined;
     
     return (
       <div className="space-y-8 mt-8">
         <div>
           <h3 className="text-lg font-medium text-gray-900">
-            {questionNumber}. {title}
+            {title}
           </h3>
           <p className="mt-1 text-sm text-gray-500">
             Seleccione con qué frecuencia ocurren las siguientes situaciones
@@ -234,10 +228,10 @@ function App() {
                       <td key={option} className="px-3 py-4 text-center">
                         <input
                           type="radio"
-                          name={`frequency-${questionNumber}-${qIndex}`}
+                          name={`frequency-${section}-${qIndex}`}
                           value={option}
-                          checked={(formData[`frequencyRatings${questionNumber}` as keyof FormData] as FrequencyRatings)[question] === option}
-                          onChange={() => handleFrequencyChange(questionNumber, question, option)}
+                          checked={(formData[section] as FrequencyRatings)[question] === option}
+                          onChange={() => handleFrequencyChange(section, question, option)}
                           className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                           required
                         />
@@ -452,21 +446,21 @@ function App() {
 
             {/* Frequency Matrix for COMUNICACIÓN */}
             <FrequencyMatrix 
-              questionNumber={5} 
+              section="Comunicacion" 
               questions={frequencyQuestions5} 
               title="COMUNICACIÓN"
             />
 
             {/* Frequency Matrix for PRÁCTICAS PEDAGÓGICAS */}
             <FrequencyMatrix 
-              questionNumber={6} 
+              section="Practicas_Pedagogicas" 
               questions={frequencyQuestions6} 
               title="PRÁCTICAS PEDAGÓGICAS"
             />
 
             {/* Frequency Matrix for CONVIVENCIA */}
             <FrequencyMatrix 
-              questionNumber={7} 
+              section="Convivencia" 
               questions={frequencyQuestions7} 
               title="CONVIVENCIA"
             />
