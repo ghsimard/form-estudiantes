@@ -11,7 +11,12 @@ interface FormData {
   teachingGradesLate: string[];
   schedule: string;
   feedbackSources: string[];
-  [key: `frequencyRatings${number}`]: FrequencyRatings;
+  frequencyRatings5: FrequencyRatings;
+  frequencyRatings6: FrequencyRatings;
+  frequencyRatings7: FrequencyRatings;
+  frequencyRatings8: FrequencyRatings;
+  frequencyRatings9: FrequencyRatings;
+  [key: string]: string | string[] | FrequencyRatings;
 }
 
 function App() {
@@ -25,6 +30,8 @@ function App() {
     frequencyRatings5: {},
     frequencyRatings6: {},
     frequencyRatings7: {},
+    frequencyRatings8: {},
+    frequencyRatings9: {}
   });
 
   const [schoolSuggestions, setSchoolSuggestions] = useState<string[]>([]);
@@ -63,7 +70,7 @@ function App() {
     setFormData(prev => ({
       ...prev,
       [`frequencyRatings${section}`]: {
-        ...prev[`frequencyRatings${section}`],
+        ...(prev[`frequencyRatings${section}` as keyof FormData] as FrequencyRatings),
         [question]: value
       }
     }));
@@ -102,7 +109,7 @@ function App() {
     // Check if all frequency rating questions are answered
     const validateFrequencySection = (questions: string[], sectionNumber: number) => {
       return questions.every(question => 
-        formData[`frequencyRatings${sectionNumber}`][question] !== undefined
+        (formData[`frequencyRatings${sectionNumber}` as keyof FormData] as FrequencyRatings)[question] !== undefined
       );
     };
 
@@ -142,6 +149,8 @@ function App() {
           frequencyRatings5: {},
           frequencyRatings6: {},
           frequencyRatings7: {},
+          frequencyRatings8: {},
+          frequencyRatings9: {}
         });
       } else {
         throw new Error(result.error || 'Failed to submit form');
@@ -183,62 +192,66 @@ function App() {
     setSchoolSuggestions([]);
   };
 
-  const FrequencyMatrix = ({ questionNumber, questions, title }: { questionNumber: number; questions: string[]; title: string }) => (
-    <div className="space-y-8 mt-8">
-      <div>
-        <h3 className="text-lg font-medium text-gray-900">
-          {questionNumber}. {title}
-        </h3>
-        <p className="mt-1 text-sm text-gray-500">
-          Seleccione con qué frecuencia ocurren las siguientes situaciones
-        </p>
-        <p className="mt-1 text-sm text-red-500">
-          * Todas las preguntas son obligatorias
-        </p>
-      </div>
-      <div className="mt-4 overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
-            <tr>
-              <th className="w-1/3 py-3 text-left text-sm font-medium text-gray-500"></th>
-              {frequencyOptions.map((option) => (
-                <th key={option} className="px-3 py-3 text-center text-sm font-medium text-gray-500">
-                  {option}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {questions.map((question, qIndex) => {
-              const isAnswered = formData[`frequencyRatings${questionNumber}`][question] !== undefined;
-              const showError = hasAttemptedSubmit && !isAnswered;
-              return (
-                <tr key={qIndex} className={qIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                  <td className={`py-4 text-sm align-top ${showError ? 'text-red-600' : 'text-gray-900'}`}>
-                    {question}
-                    {showError && <span className="text-red-600 ml-1">*</span>}
-                  </td>
-                  {frequencyOptions.map((option) => (
-                    <td key={option} className="px-3 py-4 text-center">
-                      <input
-                        type="radio"
-                        name={`frequency-${questionNumber}-${qIndex}`}
-                        value={option}
-                        checked={formData[`frequencyRatings${questionNumber}`][question] === option}
-                        onChange={() => handleFrequencyChange(questionNumber, question, option)}
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                        required
-                      />
+  const FrequencyMatrix = ({ questionNumber, questions, title }: { questionNumber: number; questions: string[]; title: string }) => {
+    const isAnswered = (question: string) => 
+      (formData[`frequencyRatings${questionNumber}` as keyof FormData] as FrequencyRatings)[question] !== undefined;
+    
+    return (
+      <div className="space-y-8 mt-8">
+        <div>
+          <h3 className="text-lg font-medium text-gray-900">
+            {questionNumber}. {title}
+          </h3>
+          <p className="mt-1 text-sm text-gray-500">
+            Seleccione con qué frecuencia ocurren las siguientes situaciones
+          </p>
+          <p className="mt-1 text-sm text-red-500">
+            * Todas las preguntas son obligatorias
+          </p>
+        </div>
+        <div className="mt-4 overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
+            <thead>
+              <tr>
+                <th className="w-1/3 py-3 text-left text-sm font-medium text-gray-500"></th>
+                {frequencyOptions.map((option) => (
+                  <th key={option} className="px-3 py-3 text-center text-sm font-medium text-gray-500">
+                    {option}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {questions.map((question, qIndex) => {
+                const showError = hasAttemptedSubmit && !isAnswered(question);
+                return (
+                  <tr key={qIndex} className={qIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                    <td className={`py-4 text-sm align-top ${showError ? 'text-red-600' : 'text-gray-900'}`}>
+                      {question}
+                      {showError && <span className="text-red-600 ml-1">*</span>}
                     </td>
-                  ))}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+                    {frequencyOptions.map((option) => (
+                      <td key={option} className="px-3 py-4 text-center">
+                        <input
+                          type="radio"
+                          name={`frequency-${questionNumber}-${qIndex}`}
+                          value={option}
+                          checked={(formData[`frequencyRatings${questionNumber}` as keyof FormData] as FrequencyRatings)[question] === option}
+                          onChange={() => handleFrequencyChange(questionNumber, question, option)}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          required
+                        />
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   if (isSubmitted) {
     return <ThankYouPage />;
@@ -437,21 +450,21 @@ function App() {
               </div>
             </div>
 
-            {/* Frequency Matrix for question 5 */}
+            {/* Frequency Matrix for COMUNICACIÓN */}
             <FrequencyMatrix 
               questionNumber={5} 
               questions={frequencyQuestions5} 
               title="COMUNICACIÓN"
             />
 
-            {/* Frequency Matrix for question 6 */}
+            {/* Frequency Matrix for PRÁCTICAS PEDAGÓGICAS */}
             <FrequencyMatrix 
               questionNumber={6} 
               questions={frequencyQuestions6} 
               title="PRÁCTICAS PEDAGÓGICAS"
             />
 
-            {/* Frequency Matrix for question 7 */}
+            {/* Frequency Matrix for CONVIVENCIA */}
             <FrequencyMatrix 
               questionNumber={7} 
               questions={frequencyQuestions7} 
