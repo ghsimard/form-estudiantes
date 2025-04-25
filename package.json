@@ -50,13 +50,10 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "server": "ts-node src/server/index.ts",
-    "import-rectores": "ts-node src/server/importRectores.ts",
-    "convert-types": "ts-node src/server/convertDataTypes.ts",
     "deploy": "bash scripts/deploy.sh",
     "prod:server": "NODE_ENV=production node dist/server/index.js",
     "build:server": "tsc -p src/server/tsconfig.json",
-    "generate-favicon": "node scripts/generate-favicon.js",
-    "migrate-table": "ts-node scripts/migrate-table-name.ts"
+    "generate-favicon": "node scripts/generate-favicon.js"
   },
   "eslintConfig": {
     "extends": [
