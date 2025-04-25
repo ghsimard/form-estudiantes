@@ -82,9 +82,9 @@ app.post('/api/submit-form', async (req, res) => {
     console.log('Received form data:', JSON.stringify(req.body, null, 2));
     console.log('Form data keys:', Object.keys(req.body));
     console.log('Frequency ratings:', {
-      comunicacion: req.body.frequencyRatings5,
-      practicas_pedagogicas: req.body.frequencyRatings6,
-      convivencia: req.body.frequencyRatings7
+      comunicacion: req.body.comunicacion,
+      practicas_pedagogicas: req.body.practicas_pedagogicas,
+      convivencia: req.body.convivencia
     });
 
     const {
@@ -94,18 +94,20 @@ app.post('/api/submit-form', async (req, res) => {
       teachingGradesLate,
       schedule,
       feedbackSources,
-      frequencyRatings5,
-      frequencyRatings6,
-      frequencyRatings7
+      comunicacion,
+      practicas_pedagogicas,
+      convivencia
     } = req.body;
 
     // Validate required fields
     if (!schoolName || !yearsOfExperience || !schedule) {
+      console.error('Missing required fields:', { schoolName, yearsOfExperience, schedule });
       throw new Error('Missing required fields');
     }
 
     // Validate frequency ratings
-    if (!frequencyRatings5 || !frequencyRatings6 || !frequencyRatings7) {
+    if (!comunicacion || !practicas_pedagogicas || !convivencia) {
+      console.error('Missing frequency ratings:', { comunicacion, practicas_pedagogicas, convivencia });
       throw new Error('Missing frequency ratings');
     }
 
@@ -113,6 +115,7 @@ app.post('/api/submit-form', async (req, res) => {
     const currentGrade = [...(teachingGradesEarly || []), ...(teachingGradesLate || [])][0] || '';
     
     if (!currentGrade) {
+      console.error('No grade selected');
       throw new Error('No grade selected');
     }
 
@@ -135,9 +138,9 @@ app.post('/api/submit-form', async (req, res) => {
       yearsOfExperience,
       currentGrade,
       schedule,
-      JSON.stringify(frequencyRatings5),
-      JSON.stringify(frequencyRatings6),
-      JSON.stringify(frequencyRatings7)
+      JSON.stringify(comunicacion),
+      JSON.stringify(practicas_pedagogicas),
+      JSON.stringify(convivencia)
     ];
 
     console.log('Executing query with values:', values);
@@ -150,7 +153,12 @@ app.post('/api/submit-form', async (req, res) => {
       data: result.rows[0]
     });
   } catch (error) {
-    console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+      code: error instanceof Error && 'code' in error ? (error as any).code : 'No error code',
+      detail: error instanceof Error && 'detail' in error ? (error as any).detail : 'No error detail'
+    });
     res.status(500).json({
       success: false,
       error: error instanceof Error ? error.message : 'Failed to save form response',

@@ -11,11 +11,20 @@ interface FormData {
   teachingGradesLate: string[];
   schedule: string;
   feedbackSources: string[];
-  Comunicacion: FrequencyRatings;
-  Practicas_Pedagogicas: FrequencyRatings;
-  Convivencia: FrequencyRatings;
+  comunicacion: FrequencyRatings;
+  practicas_pedagogicas: FrequencyRatings;
+  convivencia: FrequencyRatings;
   [key: string]: string | string[] | FrequencyRatings;
 }
+
+type SectionKey = 'Comunicacion' | 'Practicas_Pedagogicas' | 'Convivencia';
+type FrequencyKey = 'comunicacion' | 'practicas_pedagogicas' | 'convivencia';
+
+const SECTION_TO_FREQUENCY: Record<SectionKey, FrequencyKey> = {
+  'Comunicacion': 'comunicacion',
+  'Practicas_Pedagogicas': 'practicas_pedagogicas',
+  'Convivencia': 'convivencia'
+};
 
 function App() {
   const [formData, setFormData] = useState<FormData>({
@@ -25,9 +34,9 @@ function App() {
     teachingGradesLate: [],
     schedule: '',
     feedbackSources: [],
-    Comunicacion: {},
-    Practicas_Pedagogicas: {},
-    Convivencia: {}
+    comunicacion: {},
+    practicas_pedagogicas: {},
+    convivencia: {}
   });
 
   const [schoolSuggestions, setSchoolSuggestions] = useState<string[]>([]);
@@ -62,11 +71,11 @@ function App() {
     }));
   };
 
-  const handleFrequencyChange = (section: string, question: string, value: string) => {
+  const handleFrequencyChange = (section: SectionKey, question: string, value: string) => {
     setFormData(prev => ({
       ...prev,
-      [section]: {
-        ...(prev[section] as FrequencyRatings),
+      [SECTION_TO_FREQUENCY[section]]: {
+        ...(prev[SECTION_TO_FREQUENCY[section]] as FrequencyRatings),
         [question]: value
       }
     }));
@@ -103,9 +112,9 @@ function App() {
     }
     
     // Check if all frequency rating questions are answered
-    const validateFrequencySection = (questions: string[], section: string) => {
+    const validateFrequencySection = (questions: string[], section: SectionKey) => {
       return questions.every(question => 
-        (formData[section] as FrequencyRatings)[question] !== undefined
+        (formData[SECTION_TO_FREQUENCY[section]] as FrequencyRatings)[question] !== undefined
       );
     };
 
@@ -142,9 +151,9 @@ function App() {
           teachingGradesLate: [],
           schedule: '',
           feedbackSources: [],
-          Comunicacion: {},
-          Practicas_Pedagogicas: {},
-          Convivencia: {}
+          comunicacion: {},
+          practicas_pedagogicas: {},
+          convivencia: {}
         });
       } else {
         throw new Error(result.error || 'Failed to submit form');
@@ -186,9 +195,9 @@ function App() {
     setSchoolSuggestions([]);
   };
 
-  const FrequencyMatrix = ({ section, questions, title }: { section: string; questions: string[]; title: string }) => {
+  const FrequencyMatrix = ({ section, questions, title }: { section: SectionKey; questions: string[]; title: string }) => {
     const isAnswered = (question: string) => 
-      (formData[section] as FrequencyRatings)[question] !== undefined;
+      (formData[SECTION_TO_FREQUENCY[section]] as FrequencyRatings)[question] !== undefined;
     
     return (
     <div className="space-y-8 mt-8">
@@ -230,7 +239,7 @@ function App() {
                         type="radio"
                           name={`frequency-${section}-${qIndex}`}
                         value={option}
-                          checked={(formData[section] as FrequencyRatings)[question] === option}
+                          checked={(formData[SECTION_TO_FREQUENCY[section]] as FrequencyRatings)[question] === option}
                           onChange={() => handleFrequencyChange(section, question, option)}
                         className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                         required
