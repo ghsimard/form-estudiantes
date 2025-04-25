@@ -191,60 +191,60 @@ function App() {
       (formData[section] as FrequencyRatings)[question] !== undefined;
     
     return (
-      <div className="space-y-8 mt-8">
-        <div>
-          <h3 className="text-lg font-medium text-gray-900">
+    <div className="space-y-8 mt-8">
+      <div>
+        <h3 className="text-lg font-medium text-gray-900">
             {title}
-          </h3>
-          <p className="mt-1 text-sm text-gray-500">
-            Seleccione con qué frecuencia ocurren las siguientes situaciones
-          </p>
-          <p className="mt-1 text-sm text-red-500">
-            * Todas las preguntas son obligatorias
-          </p>
-        </div>
-        <div className="mt-4 overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="w-1/3 py-3 text-left text-sm font-medium text-gray-500"></th>
-                {frequencyOptions.map((option) => (
-                  <th key={option} className="px-3 py-3 text-center text-sm font-medium text-gray-500">
-                    {option}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {questions.map((question, qIndex) => {
+        </h3>
+        <p className="mt-1 text-sm text-gray-500">
+          Seleccione con qué frecuencia ocurren las siguientes situaciones
+        </p>
+        <p className="mt-1 text-sm text-red-500">
+          * Todas las preguntas son obligatorias
+        </p>
+      </div>
+      <div className="mt-4 overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th className="w-1/3 py-3 text-left text-sm font-medium text-gray-500"></th>
+              {frequencyOptions.map((option) => (
+                <th key={option} className="px-3 py-3 text-center text-sm font-medium text-gray-500">
+                  {option}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {questions.map((question, qIndex) => {
                 const showError = hasAttemptedSubmit && !isAnswered(question);
-                return (
-                  <tr key={qIndex} className={qIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                    <td className={`py-4 text-sm align-top ${showError ? 'text-red-600' : 'text-gray-900'}`}>
-                      {question}
-                      {showError && <span className="text-red-600 ml-1">*</span>}
-                    </td>
-                    {frequencyOptions.map((option) => (
-                      <td key={option} className="px-3 py-4 text-center">
-                        <input
-                          type="radio"
+              return (
+                <tr key={qIndex} className={qIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                  <td className={`py-4 text-sm align-top ${showError ? 'text-red-600' : 'text-gray-900'}`}>
+                    {question}
+                    {showError && <span className="text-red-600 ml-1">*</span>}
+                  </td>
+                  {frequencyOptions.map((option) => (
+                    <td key={option} className="px-3 py-4 text-center">
+                      <input
+                        type="radio"
                           name={`frequency-${section}-${qIndex}`}
-                          value={option}
+                        value={option}
                           checked={(formData[section] as FrequencyRatings)[question] === option}
                           onChange={() => handleFrequencyChange(section, question, option)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                          required
-                        />
-                      </td>
-                    ))}
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                        required
+                      />
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
-    );
+    </div>
+  );
   };
 
   if (isSubmitted) {

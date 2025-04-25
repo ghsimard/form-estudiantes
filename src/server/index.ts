@@ -86,9 +86,9 @@ const createTableQuery = `
     grados_asignados TEXT[] NOT NULL,
     jornada VARCHAR(50) NOT NULL,
     retroalimentacion_de TEXT[] NOT NULL,
-    frequency_ratings6 JSONB NOT NULL,
-    frequency_ratings7 JSONB NOT NULL,
-    frequency_ratings8 JSONB NOT NULL
+    comunicacion JSONB NOT NULL,
+    practicas_pedagogicas JSONB NOT NULL,
+    convivencia JSONB NOT NULL
   );
 `;
 
@@ -106,9 +106,9 @@ const createEstudiantesTableQuery = `
     anos_estudiando TEXT NOT NULL,
     grado_actual TEXT NOT NULL,
     jornada TEXT NOT NULL,
-    Comunicacion JSONB NOT NULL,
-    Practicas_Pedagogicas JSONB NOT NULL,
-    Convivencia JSONB NOT NULL
+    comunicacion JSONB NOT NULL,
+    practicas_pedagogicas JSONB NOT NULL,
+    convivencia JSONB NOT NULL
   );
 `;
 
@@ -119,7 +119,13 @@ pool.query(createEstudiantesTableQuery)
 // API endpoint to save form data
 app.post('/api/submit-form', async (req, res) => {
   try {
-    console.log('Received form data:', req.body);
+    console.log('Received form data:', JSON.stringify(req.body, null, 2));
+    console.log('Form data keys:', Object.keys(req.body));
+    console.log('Frequency ratings:', {
+      comunicacion: req.body.frequencyRatings5,
+      practicas_pedagogicas: req.body.frequencyRatings6,
+      convivencia: req.body.frequencyRatings7
+    });
 
     const {
       schoolName,
@@ -128,9 +134,9 @@ app.post('/api/submit-form', async (req, res) => {
       teachingGradesLate,
       schedule,
       feedbackSources,
-      Comunicacion,
-      Practicas_Pedagogicas,
-      Convivencia
+      frequencyRatings5,
+      frequencyRatings6,
+      frequencyRatings7
     } = req.body;
 
     // Validate required fields
@@ -139,7 +145,7 @@ app.post('/api/submit-form', async (req, res) => {
     }
 
     // Validate frequency ratings
-    if (!Comunicacion || !Practicas_Pedagogicas || !Convivencia) {
+    if (!frequencyRatings5 || !frequencyRatings6 || !frequencyRatings7) {
       throw new Error('Missing frequency ratings');
     }
 
@@ -156,9 +162,9 @@ app.post('/api/submit-form', async (req, res) => {
         anos_estudiando,
         grado_actual,
         jornada,
-        Comunicacion,
-        Practicas_Pedagogicas,
-        Convivencia
+        comunicacion,
+        practicas_pedagogicas,
+        convivencia
       )
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
@@ -169,9 +175,9 @@ app.post('/api/submit-form', async (req, res) => {
       yearsOfExperience,
       currentGrade,
       schedule,
-      JSON.stringify(Comunicacion),
-      JSON.stringify(Practicas_Pedagogicas),
-      JSON.stringify(Convivencia)
+      JSON.stringify(frequencyRatings5),
+      JSON.stringify(frequencyRatings6),
+      JSON.stringify(frequencyRatings7)
     ];
 
     console.log('Executing query with values:', values);
