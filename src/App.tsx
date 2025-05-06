@@ -172,19 +172,30 @@ function App() {
     setSchoolSuggestions([]);
     setShowSuggestions(false);
 
-    // Only fetch new suggestions if we have 2 or more characters
-    if (value.length >= 2) {
+    // Only fetch new suggestions if we have 3 or more characters and less than 100
+    if (value.length >= 3 && value.length < 100) {
       try {
-        const response = await fetch(`/api/search-schools?q=${encodeURIComponent(value)}`);
-        if (response.ok) {
+        const response = await fetch('http://localhost:3003/api/search-schools', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ q: value.substring(0, 100) })
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
           const suggestions = await response.json();
           if (suggestions.length > 0) {
             setSchoolSuggestions(suggestions);
             setShowSuggestions(true);
-          }
         }
       } catch (error) {
         console.error('Error fetching school suggestions:', error);
+        setSchoolSuggestions([]);
+        setShowSuggestions(false);
       }
     }
   };
@@ -316,11 +327,10 @@ function App() {
                   value={formData.schoolName}
                   onChange={handleSchoolNameChange}
                   className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  placeholder="Empiece a escribir para ver sugerencias..."
                 />
                 {showSuggestions && 
                  schoolSuggestions.length > 0 && 
-                 formData.schoolName.length >= 2 && (
+                 formData.schoolName.length >= 3 && (
                   <div
                     ref={dropdownRef}
                     className="absolute z-10 mt-1 w-full bg-white shadow-lg max-h-60 rounded-md py-1 text-base overflow-auto focus:outline-none sm:text-sm"

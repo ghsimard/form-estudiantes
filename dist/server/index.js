@@ -18,31 +18,19 @@ console.log('Environment:', {
 });
 // Middleware
 app.use(cors());
-app.use(express.json());
-// Health check endpoint
-app.get('/health', async (req, res) => {
-    try {
-        if (!process.env.DATABASE_URL) {
-            throw new Error('DATABASE_URL is not set');
-        }
-        await pool.query('SELECT NOW()');
-        res.json({ status: 'healthy', database: 'connected' });
-    }
-    catch (error) {
-        console.error('Health check failed:', error);
-        res.status(500).json({
-            status: 'unhealthy',
-            database: 'disconnected',
-            error: process.env.NODE_ENV === 'production' ? 'Database connection failed' : error.message
-        });
-    }
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+// Increase header size limit
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    next();
 });
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../build')));
 // PostgreSQL connection configuration
 if (!process.env.DATABASE_URL) {
     console.error('DATABASE_URL environment variable is not set!');
-    process.exit(1); // Exit if no database URL is provided
+    process.exit(1);
 }
 const dbConfig = {
     connectionString: process.env.DATABASE_URL,
@@ -61,61 +49,52 @@ pool.query('SELECT NOW()')
     .catch(err => {
     console.error('Error connecting to database:', err);
     if (process.env.NODE_ENV === 'production') {
-        process.exit(1); // Exit in production if we can't connect to the database
+        process.exit(1);
     }
 });
-// Create table if it doesn't exist
-const createTableQuery = `
-  CREATE TABLE IF NOT EXISTS docentes_form_submissions (
-    id SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    institucion_educativa VARCHAR(255) NOT NULL,
-    anos_como_docente VARCHAR(50) NOT NULL,
-    grados_asignados TEXT[] NOT NULL,
-    jornada VARCHAR(50) NOT NULL,
-    retroalimentacion_de TEXT[] NOT NULL,
-    frequency_ratings6 JSONB NOT NULL,
-    frequency_ratings7 JSONB NOT NULL,
-    frequency_ratings8 JSONB NOT NULL
-  );
-`;
-pool.query(createTableQuery)
-    .then(() => console.log('docentes_form_submissions table created successfully'))
-    .catch(err => console.error('Error creating docentes_form_submissions table:', err));
-// Create estudiantes_form_submissions table if it doesn't exist
-const createEstudiantesTableQuery = `
-  DROP TABLE IF EXISTS estudiantes_form_submissions;
-  CREATE TABLE estudiantes_form_submissions (
-    id SERIAL PRIMARY KEY,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    institucion_educativa TEXT NOT NULL,
-    anos_estudiando TEXT NOT NULL,
-    grado_actual TEXT NOT NULL,
-    jornada TEXT NOT NULL,
-    frequency_ratings5 JSONB NOT NULL,
-    frequency_ratings6 JSONB NOT NULL,
-    frequency_ratings7 JSONB NOT NULL
-  );
-`;
-pool.query(createEstudiantesTableQuery)
-    .then(() => console.log('estudiantes_form_submissions table created successfully'))
-    .catch(err => console.error('Error creating estudiantes_form_submissions table:', err));
+// Health check endpoint
+app.get('/health', async (req, res) => {
+    try {
+        if (!process.env.DATABASE_URL) {
+            throw new Error('DATABASE_URL is not set');
+        }
+        await pool.query('SELECT NOW()');
+        res.json({ status: 'healthy', database: 'connected' });
+    }
+    catch (error) {
+        console.error('Health check failed:', error);
+        res.status(500).json({
+            status: 'unhealthy',
+            database: 'disconnected',
+            error: process.env.NODE_ENV === 'production' ? 'Database connection failed' : error.message
+        });
+    }
+});
 // API endpoint to save form data
 app.post('/api/submit-form', async (req, res) => {
     try {
-        console.log('Received form data:', req.body);
-        const { schoolName, yearsOfExperience, teachingGradesEarly, teachingGradesLate, schedule, feedbackSources, frequencyRatings5, frequencyRatings6, frequencyRatings7 } = req.body;
+        console.log('Received form data:', JSON.stringify(req.body, null, 2));
+        console.log('Form data keys:', Object.keys(req.body));
+        console.log('Frequency ratings:', {
+            comunicacion: req.body.comunicacion,
+            practicas_pedagogicas: req.body.practicas_pedagogicas,
+            convivencia: req.body.convivencia
+        });
+        const { schoolName, yearsOfExperience, teachingGradesEarly, teachingGradesLate, schedule, feedbackSources, comunicacion, practicas_pedagogicas, convivencia } = req.body;
         // Validate required fields
         if (!schoolName || !yearsOfExperience || !schedule) {
+            console.error('Missing required fields:', { schoolName, yearsOfExperience, schedule });
             throw new Error('Missing required fields');
         }
         // Validate frequency ratings
-        if (!frequencyRatings5 || !frequencyRatings6 || !frequencyRatings7) {
+        if (!comunicacion || !practicas_pedagogicas || !convivencia) {
+            console.error('Missing frequency ratings:', { comunicacion, practicas_pedagogicas, convivencia });
             throw new Error('Missing frequency ratings');
         }
         // Combine early and late grades into current_grade
         const currentGrade = [...(teachingGradesEarly || []), ...(teachingGradesLate || [])][0] || '';
         if (!currentGrade) {
+            console.error('No grade selected');
             throw new Error('No grade selected');
         }
         const query = `
@@ -124,9 +103,9 @@ app.post('/api/submit-form', async (req, res) => {
         anos_estudiando,
         grado_actual,
         jornada,
-        frequency_ratings5,
-        frequency_ratings6,
-        frequency_ratings7
+        comunicacion,
+        practicas_pedagogicas,
+        convivencia
       )
       VALUES ($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
@@ -136,9 +115,9 @@ app.post('/api/submit-form', async (req, res) => {
             yearsOfExperience,
             currentGrade,
             schedule,
-            JSON.stringify(frequencyRatings5),
-            JSON.stringify(frequencyRatings6),
-            JSON.stringify(frequencyRatings7)
+            JSON.stringify(comunicacion),
+            JSON.stringify(practicas_pedagogicas),
+            JSON.stringify(convivencia)
         ];
         console.log('Executing query with values:', values);
         const result = await pool.query(query, values);
@@ -149,7 +128,12 @@ app.post('/api/submit-form', async (req, res) => {
         });
     }
     catch (error) {
-        console.error('Stack trace:', error instanceof Error ? error.stack : 'No stack trace available');
+        console.error('Error details:', {
+            message: error instanceof Error ? error.message : 'Unknown error',
+            stack: error instanceof Error ? error.stack : 'No stack trace',
+            code: error instanceof Error && 'code' in error ? error.code : 'No error code',
+            detail: error instanceof Error && 'detail' in error ? error.detail : 'No error detail'
+        });
         res.status(500).json({
             success: false,
             error: error instanceof Error ? error.message : 'Failed to save form response',
@@ -158,8 +142,8 @@ app.post('/api/submit-form', async (req, res) => {
     }
 });
 // API endpoint to search for school names
-app.get('/api/search-schools', async (req, res) => {
-    const searchTerm = req.query.q;
+app.post('/api/search-schools', async (req, res) => {
+    const searchTerm = req.body.q;
     try {
         const query = `
       SELECT DISTINCT TRIM(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_) as school_name

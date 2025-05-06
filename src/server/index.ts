@@ -23,7 +23,14 @@ console.log('Environment:', {
 
 // Middleware
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Increase header size limit
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  next();
+});
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, '../../build')));
@@ -168,15 +175,15 @@ app.post('/api/submit-form', async (req, res) => {
 });
 
 // API endpoint to search for school names
-app.get('/api/search-schools', async (req, res) => {
-  const searchTerm = req.query.q;
+app.post('/api/search-schools', async (req, res) => {
+  const searchTerm = req.body.q;
   
   try {
     const query = `
       SELECT DISTINCT TRIM(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_) as school_name
       FROM rectores
       WHERE LOWER(TRIM(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_)) LIKE LOWER($1)
-      LIMIT 10;
+      ORDER BY school_name;
     `;
     
     const result = await pool.query(query, [`%${searchTerm}%`]);

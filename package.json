@@ -6,7 +6,7 @@
   "engines": {
     "node": ">=18.0.0"
   },
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3003",
   "dependencies": {
     "@craco/craco": "^7.1.0",
     "@emotion/react": "^11.14.0",
@@ -43,8 +43,8 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
-    "start": "node dist/scripts/wait-for-db.js && node dist/server/index.js",
-    "start:dev": "react-scripts start",
+    "start:server": "node dist/scripts/wait-for-db.js && node dist/server/index.js",
+    "start:dev": "PORT=3002 react-scripts start",
     "prebuild": "npm install",
     "build": "react-scripts build && tsc -p src/server/tsconfig.json && tsc -p scripts/tsconfig.json",
     "test": "react-scripts test",

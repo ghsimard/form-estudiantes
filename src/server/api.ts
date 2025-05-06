@@ -24,7 +24,6 @@ router.get('/schools', async (req, res) => {
       WHERE LOWER(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_) 
       LIKE LOWER($1)
       ORDER BY nombre_de_la_institucion_educativa_en_la_actualmente_desempena_
-      LIMIT 10
     `;
     
     const result = await pool.query(query, [`%${searchTerm}%`]);
