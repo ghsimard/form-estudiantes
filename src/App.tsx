@@ -175,7 +175,7 @@ function App() {
     // Only fetch new suggestions if we have 3 or more characters and less than 100
     if (value.length >= 3 && value.length < 100) {
       try {
-        const response = await fetch('http://localhost:3003/api/search-schools', {
+        const response = await fetch('/api/search-schools', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
