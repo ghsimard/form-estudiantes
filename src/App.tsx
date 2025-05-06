@@ -322,11 +322,11 @@ function App() {
                 <input
                   type="text"
                   id="schoolName"
-                  name="schoolName"
-                  required
                   value={formData.schoolName}
                   onChange={handleSchoolNameChange}
-                  className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Empiece a escribir para ver sugerencias..."
+                  required
                 />
                 {showSuggestions && 
                  schoolSuggestions.length > 0 && 
