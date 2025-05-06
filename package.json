@@ -43,6 +43,7 @@
     "xlsx": "^0.18.5"
   },
   "scripts": {
+    "start": "node dist/server/index.js",
     "start:server": "node dist/scripts/wait-for-db.js && node dist/server/index.js",
     "start:dev": "PORT=3002 react-scripts start",
     "prebuild": "npm install",
