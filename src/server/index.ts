@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3003;
 
 // Debug environment
 console.log('Environment:', {
