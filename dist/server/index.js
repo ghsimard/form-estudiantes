@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 dotenv.config();
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3003;
 // Debug environment
 console.log('Environment:', {
     NODE_ENV: process.env.NODE_ENV,
@@ -149,7 +149,7 @@ app.post('/api/search-schools', async (req, res) => {
       SELECT DISTINCT TRIM(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_) as school_name
       FROM rectores
       WHERE LOWER(TRIM(nombre_de_la_institucion_educativa_en_la_actualmente_desempena_)) LIKE LOWER($1)
-      LIMIT 10;
+      ORDER BY school_name;
     `;
         const result = await pool.query(query, [`%${searchTerm}%`]);
         res.json(result.rows.map(row => row.school_name));

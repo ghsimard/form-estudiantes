@@ -1,7 +1,7 @@
 module.exports = {
   apps: [{
-    name: 'form-docentes',
-    script: 'server/index.js',
+    name: 'form-estudiantes',
+    script: 'dist/server/index.js',
     instances: 1,
     autorestart: true,
     watch: false,

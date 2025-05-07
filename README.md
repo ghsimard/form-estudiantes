@@ -1,10 +1,10 @@
-# Form Docentes - Encuesta de Ambiente Escolar
+# Form Estudiantes - Encuesta de Ambiente Escolar
 
-Este proyecto es una aplicación web para recopilar información sobre el ambiente escolar a través de una encuesta dirigida a docentes. La aplicación es parte del Programa Rectores Líderes Transformadores y Coordinadores Líderes Transformadores.
+Este proyecto es una aplicación web para recopilar información sobre el ambiente escolar a través de una encuesta dirigida a estudiantes. La aplicación es parte del Programa Rectores Líderes Transformadores y Coordinadores Líderes Transformadores.
 
 ## Características
 
-- Formulario interactivo para docentes
+- Formulario interactivo para estudiantes
 - Autocompletado de nombres de instituciones educativas
 - Validación de campos requeridos
 - Almacenamiento de respuestas en base de datos PostgreSQL
@@ -30,8 +30,8 @@ Este proyecto es una aplicación web para recopilar información sobre el ambien
 
 1. Clonar el repositorio:
 ```bash
-git clone https://github.com/ghsimard/form-docentes.git
-cd form-docentes
+git clone https://github.com/ghsimard/form-estudiantes.git
+cd form-estudiantes
 ```
 
 2. Instalar dependencias:

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: form-docentes
+    name: form-estudiantes
     env: node
     region: oregon
     buildCommand: npm run build
